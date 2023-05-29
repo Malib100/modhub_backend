@@ -6,9 +6,34 @@ import { ModModule } from './mod/mod.module';
 import { GameModule } from './game/game.module';
 import { CategoryModule } from './category/category.module';
 import { PictureModule } from './picture/picture.module';
+import {ConfigModule} from "@nestjs/config";
+import process from "process";
+import {TypeOrmModule} from "@nestjs/typeorm";
 
 @Module({
-  imports: [UserModule, ModModule, GameModule, CategoryModule, PictureModule],
+  imports: [
+      ConfigModule.forRoot({
+        isGlobal:true
+      }),
+
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DATABASE_HOST || 'localhost',
+      port: parseInt(process.env.DATABASE_PORT) || 5432,
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      autoLoadEntities: true,
+      entities: [ ],
+      synchronize: true
+    }),
+
+    UserModule,
+    ModModule,
+    GameModule,
+    CategoryModule,
+    PictureModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
