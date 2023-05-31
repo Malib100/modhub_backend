@@ -1,4 +1,13 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
+import {Mod} from "./mod.entity";
 
 @Entity('pictures')
 export class Picture {
@@ -16,4 +25,8 @@ export class Picture {
 
     @UpdateDateColumn()
     updated_at: Date;
+
+    @ManyToOne(()=> Mod, (mod:Mod)=> mod.picture)
+    @JoinColumn({name:'mods_id'})
+    mod: Mod;
 }

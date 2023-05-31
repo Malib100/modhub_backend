@@ -16,7 +16,7 @@ import {TypeOrmModule} from "@nestjs/typeorm";
         isGlobal:true
       }),
 
-
+/*
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_NAME|| 'localhost',
@@ -28,8 +28,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
       entities: [ ],
       synchronize: true
     }),
+*/
 
-/*
     TypeOrmModule.forRoot({
       type: 'postgres',
       host:'localhost',
@@ -42,7 +42,7 @@ import {TypeOrmModule} from "@nestjs/typeorm";
       synchronize: true
     }),
 
- */
+
 
     UserModule,
     ModModule,

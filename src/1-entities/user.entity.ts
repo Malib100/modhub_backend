@@ -1,5 +1,14 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn, ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
 import {IsNotEmpty} from "class-validator";
+import {Mod} from "./mod.entity";
 
 @Entity('users')
 export class User {
@@ -26,4 +35,8 @@ export class User {
 
     @UpdateDateColumn()
     updated_at: Date;
+
+    @OneToMany(()=> Mod, (mod:Mod)=> mod.user)
+    mods: Mod[];
+
 }
