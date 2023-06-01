@@ -22,7 +22,7 @@ export class UserService {
       throw new BadRequestException("Email is in use.");
     }
 
-    const hashed = await bcrypt.hash(createUserDto.password, 100);
+    const hashed = await bcrypt.hash(createUserDto.password, 10);
     const UserData = {...createUserDto, password:hashed}
 
     try {
@@ -48,15 +48,17 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
 
-      const UserData = {...updateUserDto}
+
 
       if (updateUserDto.password != "") {
-        const hashed = await bcrypt.hash(updateUserDto.password, 100);
+        const hashed = await bcrypt.hash(updateUserDto.password, 10);
         const UserData = {...updateUserDto, password: hashed}
+
+        await this.userRepository.update(id,UserData)
+        return this.findById(id);
       }
 
-
-      await this.userRepository.update(id,UserData)
+      await this.userRepository.update(id,updateUserDto)
       return this.findById(id);
 
     }catch (e){
