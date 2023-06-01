@@ -48,8 +48,6 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
 
-
-
       if (updateUserDto.password != "") {
         const hashed = await bcrypt.hash(updateUserDto.password, 10);
         const UserData = {...updateUserDto, password: hashed}
