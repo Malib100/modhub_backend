@@ -4,7 +4,6 @@ import { UpdateGameDto } from './dto/update-game.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Game} from "../1-entities/game.entity";
 import {Repository} from "typeorm";
-import {tsconfigPathsBeforeHookFactory} from "@nestjs/cli/lib/compiler/hooks/tsconfig-paths.hook";
 
 @Injectable()
 export class GameService {
