@@ -1,26 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Category} from "../1-entities/category.entity";
+import {Repository} from "typeorm";
+import {tsconfigPathsBeforeHookFactory} from "@nestjs/cli/lib/compiler/hooks/tsconfig-paths.hook";
 
 @Injectable()
 export class CategoryService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+
+  constructor(
+      @InjectRepository(Category) private readonly categoryRepository:Repository<Category>
+  ) {
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async create(createCategoryDto: CreateCategoryDto) {
+    try {
+      const newCategory = this.categoryRepository.create(createCategoryDto);
+      return await this.categoryRepository.save(newCategory);
+
+    }catch (e){
+      throw new BadRequestException(e);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findAll() {
+    return await this.categoryRepository.find();
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async findById(id: number) {
+    return await this.categoryRepository.findOneBy({id});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    try {
+      await this.categoryRepository.update(id,updateCategoryDto)
+      return this.findById(id);
+
+    }catch (e){
+      throw new BadRequestException(e)
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      return this.categoryRepository.delete(id);
+    }
+    catch (e) {
+
+      throw new BadRequestException(e);
+    }
   }
 }
+
+/*
+async remove(id: number): Promise<DeleteResult> {
+    const blogs = await this.blogService.findByCategoryId(id);
+    blogs.map((blog:Blog,i)=>{
+      this.blogService.remove(blog.id);
+    });
+    try {
+      return this.categoryRepository.delete(id);
+    }
+    catch (e) {
+      console.log(e);
+      throw new BadRequestException('Napaka pri brisanju');
+    }
+ */
