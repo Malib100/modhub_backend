@@ -48,12 +48,15 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
 
+      const UserData = {...updateUserDto}
+
       if (updateUserDto.password != "") {
         const hashed = await bcrypt.hash(updateUserDto.password, 100);
         const UserData = {...updateUserDto, password: hashed}
       }
 
-      await this.userRepository.update(id,updateUserDto)
+
+      await this.userRepository.update(id,UserData)
       return this.findById(id);
 
     }catch (e){
