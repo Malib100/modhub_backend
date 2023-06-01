@@ -2,33 +2,38 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import {Game} from "../1-entities/game.entity";
 
 @Controller('game')
 export class GameController {
-  constructor(private readonly gameService: GameService) {}
+  constructor(
+      private readonly gameService: GameService
+  ) {
+
+  }
 
   @Post()
-  create(@Body() createGameDto: CreateGameDto) {
+  async create(@Body() createGameDto: CreateGameDto){
     return this.gameService.create(createGameDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.gameService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gameService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return this.gameService.findById(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
+  async update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
     return this.gameService.update(+id, updateGameDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.gameService.remove(+id);
   }
 }

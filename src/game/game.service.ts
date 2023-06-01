@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable} from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Game} from "../1-entities/game.entity";
+import {Repository} from "typeorm";
+import {tsconfigPathsBeforeHookFactory} from "@nestjs/cli/lib/compiler/hooks/tsconfig-paths.hook";
 
 @Injectable()
 export class GameService {
-  create(createGameDto: CreateGameDto) {
-    return 'This action adds a new game';
+
+  constructor(
+      @InjectRepository(Game) private readonly gameRepository: Repository<Game>
+  ) {
   }
 
-  findAll() {
-    return `This action returns all game`;
+  async create(createGameDto: CreateGameDto) {
+    try {
+      const newGame = this.gameRepository.create(createGameDto);
+      return await this.gameRepository.save(newGame);
+    }catch (e){
+      throw new BadRequestException(e)
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} game`;
+  async findAll() {
+    return await this.gameRepository.find();
   }
 
-  update(id: number, updateGameDto: UpdateGameDto) {
-    return `This action updates a #${id} game`;
+  async findById(id: number) {
+    return await this.gameRepository.findOneBy({id});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} game`;
+  async update(id: number, updateGameDto: UpdateGameDto) {
+    try {
+      await this.gameRepository.update(id, updateGameDto);
+      return this.findById(id);
+    }catch (e){
+      throw new BadRequestException(e)
+    }
+  }
+
+  async remove(id: number) {
+    return await this.gameRepository.delete(id);
   }
 }
