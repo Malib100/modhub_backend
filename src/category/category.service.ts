@@ -4,7 +4,6 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Category} from "../1-entities/category.entity";
 import {Repository} from "typeorm";
-import {tsconfigPathsBeforeHookFactory} from "@nestjs/cli/lib/compiler/hooks/tsconfig-paths.hook";
 
 @Injectable()
 export class CategoryService {
