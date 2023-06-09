@@ -5,9 +5,9 @@ import { UserModule } from './user/user.module';
 import { ModModule } from './mod/mod.module';
 import { GameModule } from './game/game.module';
 import { CategoryModule } from './category/category.module';
-import { PictureModule } from './picture/picture.module';
 import {ConfigModule} from "@nestjs/config";
 import {TypeOrmModule} from "@nestjs/typeorm";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -47,7 +47,7 @@ import {TypeOrmModule} from "@nestjs/typeorm";
     ModModule,
     GameModule,
     CategoryModule,
-    PictureModule
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
