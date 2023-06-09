@@ -8,7 +8,6 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import {User} from "./user.entity";
-import {Picture} from "./picture.entity";
 import {Game} from "./game.entity";
 import {Category} from "./category.entity";
 
@@ -44,6 +43,4 @@ export class Mod {
     @JoinColumn({name:'category_id'})
     category: Category;
 
-    @OneToMany(()=> Picture, (picture:Picture)=> picture.mod)
-    picture: Picture[];
 }
