@@ -1,34 +1,70 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Request,
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  BadRequestException
+} from '@nestjs/common';
 import { ModService } from './mod.service';
 import { CreateModDto } from './dto/create-mod.dto';
 import { UpdateModDto } from './dto/update-mod.dto';
+import {JwtAuthGuard} from "../auth/guards/jwtAuth.guard";
+import {Mod} from "../1-entities/mod.entity";
 
 @Controller('mod')
 export class ModController {
   constructor(private readonly modService: ModService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createModDto: CreateModDto) {
-    return this.modService.create(createModDto);
+  async create(@Request() req,@Body() createModDto: CreateModDto) {
+    return this.modService.create(req.user.id,createModDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.modService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.modService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return this.modService.findById(+id);
   }
 
+  @Get('category/:id')
+  async findOneByCategory(@Param('id') id:string){
+    return this.modService.findByCategory(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateModDto: UpdateModDto) {
+  async update(@Request() req,@Param('id') id: string, @Body() updateModDto: UpdateModDto) {
+
+    const currentUser = req.user.id;
+    const mod:Mod = await this.modService.findById(+id);
+
+    if (currentUser!=mod.user.id || mod.user.isAdmin){
+      throw new BadRequestException("You do not have permission to edit this mod.")
+    }
+
     return this.modService.update(+id, updateModDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.modService.remove(+id);
+  async remove(@Request() req, @Param('id') id: string) {
+    const currentUser = req.user.id;
+    const mod = await this.modService.findById(+id);
+
+    if (currentUser!=mod.user.id || mod.user.isAdmin){
+      throw new BadRequestException("You do not have permission to delete this mod.")
+    }
+
+    return await this.modService.remove(+id);
   }
 }

@@ -14,7 +14,7 @@ import {Category} from "./category.entity";
 @Entity('mods')
 export class Mod {
     @PrimaryGeneratedColumn()
-    id:string;
+    id:number;
 
     @Column()
     title:string;
