@@ -61,7 +61,7 @@ export class ModController {
     const currentUser = req.user.id;
     const mod = await this.modService.findById(+id);
 
-    if (currentUser!=mod.user.id || mod.user.isAdmin){
+    if (currentUser!=mod.user.id || !mod.user.isAdmin){
       throw new BadRequestException("You do not have permission to delete this mod.")
     }
 
