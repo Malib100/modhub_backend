@@ -48,7 +48,7 @@ export class ModController {
     const currentUser = req.user.id;
     const mod:Mod = await this.modService.findById(+id);
 
-    if (currentUser!=mod.user.id || mod.user.isAdmin){
+    if (currentUser!=mod.user.id || !mod.user.isAdmin){
       throw new BadRequestException("You do not have permission to edit this mod.")
     }
 
@@ -59,12 +59,18 @@ export class ModController {
   @Delete(':id')
   async remove(@Request() req, @Param('id') id: string) {
     const currentUser = req.user.id;
+    const currentUserRole:boolean = req.user.isAdmin;
     const mod = await this.modService.findById(+id);
 
-    if (currentUser!=mod.user.id || !mod.user.isAdmin){
+    //console.log(currentUserRole);
+    //console.log(req.user.isAdmin);
+
+    if (currentUser!=mod.user.id || !currentUserRole){
       throw new BadRequestException("You do not have permission to delete this mod.")
+    }else {
+      return await this.modService.remove(+id);
     }
 
-    return await this.modService.remove(+id);
+
   }
 }
