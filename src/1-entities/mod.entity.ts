@@ -23,6 +23,9 @@ export class Mod {
     description:string;
 
     @Column()
+    url:string;
+
+    @Column()
     rating:number;
 
     @CreateDateColumn()

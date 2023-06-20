@@ -9,6 +9,9 @@ export class CreateModDto {
     @IsOptional()
     description?:string;
 
+    @IsNotEmpty()
+    url:string;
+
     @IsOptional()
     rating?:number;
 

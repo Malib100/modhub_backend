@@ -11,5 +11,8 @@ export class UpdateModDto extends PartialType(CreateModDto) {
     description?:string;
 
     @IsOptional()
+    url?:string;
+
+    @IsOptional()
     rating?:number;
 }
